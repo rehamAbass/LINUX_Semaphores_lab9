@@ -1,0 +1,55 @@
+To initialize a semaphore, use sem_init:
+      int sem_init(sem_t *sem, int pshared, unsigned int value);
+•	sem points to a semaphore object to initialize
+•	pshared is a flag indicating whether or not the semaphore should be shared with fork()ed processes. In Linux only 0;
+•	value is an initial value to set the semaphore to
+Example of use:        sem_init(&sem_name, 0, 10);
+____________________________________________________________________
+To wait on a semaphore, use sem_wait:      
+      int sem_wait(sem_t *sem);
+Example of use: 	      sem_wait(&sem_name); 
+•	If the value of the semaphore isn't positive, the calling process blocks; one of the blocked processes wakes up when another process calls sem_post.
+__________________________________________________________________________
+To increment the value of a semaphore, use sem_post:
+      int sem_post(sem_t *sem);
+Example of use:
+      sem_post(&sem_name); 
+•	It increments the value of the semaphore and wakes up a blocked process waiting on the semaphore, if any.
+____________________________________________________________________
+
+
+תרגיל 1.
+
+במסעדה למזון מהיר Fasti יש 4 סוגי עובדים : 
+•	קופאי הלוקח את הזמנות הלקוחות. 
+•	טבח המכין את האוכל במטבח. 
+•	עובד אריזה שאורז את האוכל המוכן. 
+•	עובד עמדת הגשה המוסר את האוכל המוכן ללקוח. 
+
+עליכם לכתוב תכנית המדמה את פעולתה הסדירה של המסעדה. לכל הזמנה מספר הזמנה סידורי.  יש להשתמש ב sleep(1) לדימוי הפעולה (מלבד זאת, אין להשתמש ב sleep).
+ 
+נדרש ליצור 4 פונקציות  לדמות את ארבעת סוגי העובדים. כל עובד מסעדה עובד בלולאה אינסופית שבה הוא מדפיס את פעולתו ומשתמש ב sleep(1) לדימוי ביצוע הפעולה.
+
+פלט התכנית לדוגמא:
+Cashier takes order #1
+Cook #1
+Cashier takes order #2
+Packaging #1
+Cook #2
+Cashier takes order #3
+Give bag #1 to customer – End #1
+…..
+עליך לכתוב תכנית בשפת C. ניתן להגדיר משתנים וסמפורים כרצונך. 
+
+ה main יהיה:
+int main(){
+	pthread_t p_workers[numOfworker];
+	int  i=0 , ans[numOfworker];
+	...//ניתן להוסיף קוד כרצונך
+	ans[0]=pthread_create(&p_workers[0], NULL,  Cashier, NULL);
+	ans[1]=pthread_create(&p_workers[1], NULL,  Cook, NULL);
+	ans[2]=pthread_create(&p_workers[2], NULL,  Pack, NULL);
+	ans[3]=pthread_create(&p_workers[3], NULL,  Give, NULL);
+	sleep(20);
+	return 0;
+}
