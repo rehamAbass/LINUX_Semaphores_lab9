@@ -1,0 +1,33 @@
+
+void calls(int a , int b){
+
+	int i,max, min;
+	if( (a + b) != 5 ){			// others can call in the same time
+		if( a > b){	max =a; min=b;}
+		else{ max=b; min=a;}
+		
+		sem_wait(&city[a]);
+		sem_wait(&city[b]);
+
+		printf("%d started to talk with %d\n",a,b);
+		sleep(1);
+		printf("%d finished to talk with%d\n",a,b);
+		
+		sem_post(&city[a]);
+		sem_post(&city[b]);
+
+			///////////////////////////////////////////////	
+	}else{					// a+b = 5 we must block all the semaphores
+		for(i=0 ; i<4 ; i++){		//wait all
+			sem_wait(&city[i]);}
+
+		printf("%d started to talk with %d\n",a,b);
+		sleep(1);
+		printf("%d finished to talk with%d\n",a,b);
+
+		for(i=0 ; i<4 ; i++){		//post all
+			sem_post(&city[i]);}
+
+	}
+
+}
